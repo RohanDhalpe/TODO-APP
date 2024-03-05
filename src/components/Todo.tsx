@@ -36,6 +36,10 @@ const Todo = () => {
     );
   };
 
+  const handleInput=(e:any)=>{
+   setTodo(e.target.value)
+  }
+
   const completedTodos = todoList.filter((todo) => todo.completed);
   const incompleteTodos = todoList.filter((todo) => !todo.completed);
 
@@ -46,7 +50,7 @@ const Todo = () => {
         type="text"
         value={todo}
         placeholder="Enter a todo"
-        onChange={(e) => setTodo(e.target.value)}
+        onChange={handleInput}
         className="todo-input"
       />
       <button onClick={handleAdd} className="add-button">
