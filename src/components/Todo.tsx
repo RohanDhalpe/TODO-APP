@@ -1,4 +1,5 @@
 import { useState } from "react";
+import TodoForm from "./AddTodoForm";
 
 interface Todo {
   id: number;
@@ -7,8 +8,8 @@ interface Todo {
 }
 
 const Todo = () => {
-  const [id, setId] = useState(0);
   const [todo, setTodo] = useState<string>("");
+  const [id, setId] = useState(0);
   const [todoList, setTodoList] = useState<Todo[]>([]);
 
   const handleAdd = () => {
@@ -21,7 +22,6 @@ const Todo = () => {
       setTodoList([...todoList, newTodo]);
       setTodo("");
       setId(id + 1);
-
   };
 
   const deleteTodo = (id: number) => {
@@ -46,17 +46,12 @@ const Todo = () => {
   return (
     <div className="todo-container">
       <h2>Todos</h2>
-      <input
-        type="text"
-        value={todo}
-        placeholder="Enter a todo"
-        onChange={handleInput}
-        className="todo-input"
+    
+      <TodoForm 
+        todo={todo}
+        handleAdd={handleAdd}
+        handleInput={handleInput}
       />
-      <button onClick={handleAdd} className="add-button">
-        Add Todo
-      </button>
-
       <div className="completed-todos">
         <h3>Completed Todos</h3>
         <ul className="todo-list">
