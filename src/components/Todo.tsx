@@ -1,116 +1,78 @@
-import React, { useState, useEffect } from "react";
-import TodoForm from "./AddTodoForm";
-import useFetch from "./useFetch";
-import { TODO_ENDPOINT } from "../apiEndpoints";
+import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Import Axios
 
-interface Todo {
+export interface Todo {
   id: number;
-  todo: string;
-  completed: boolean;
+  title: string;
+  isCompleted: boolean;
 }
 
-const Todo = () => {
-  const [id, setId] = useState(0);
-  const [todo, setTodo] = useState<string>("");
-  const [todoList, setTodoList] = useState<Todo[]>([]);
+export default function Todos() {
+  const [todolist, setTodolist] = useState<Todo[]>([]);
+  const [trigger, setTrigger] = useState(0);
 
-  const { response, error, loader } = useFetch(TODO_ENDPOINT);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    !error ? setTodoList(response) : console.log(error);
-  }, [response, error]);
-  
-  const handleAdd = () => {
-    const newTodo: Todo = {
-      id: id,
-      todo: todo,
-      completed: false
-    };
-    setTodoList([...todoList, newTodo]);
-    setTodo("");
-    setId(id + 1);
+    axios.get("http://localhost:8000/todos")
+      .then((resp) => (setTodolist(resp.data)))
+      .catch((error) => console.error("Error fetching todos:", error));
+  }, [trigger]);
+
+  const handleCheckbox = (
+    todo: Todo,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    console.log(e.target.checked);
+    axios.patch(`http://localhost:8000/todos/${todo.id}`, {
+      isCompleted: e.target.checked,
+    })
+    .then(() => setTrigger(trigger => trigger + 1))
+    .catch((error) => console.error("Error updating todo:", error));
   };
 
-  const deleteTodo = (id: number) => {
-    setTodoList(todoList.filter((todo) => todo.id !== id));
+  const handleDelete = (id: number) => {
+    axios.delete(`http://localhost:8000/todos/${id}`)
+      .then(() => {
+        alert("Deleted Successfully");
+        setTrigger(trigger => trigger + 1);
+      })
+      .catch((error) => console.error("Error deleting todo:", error));
   };
-
-  const checkCompleted = (id: number) => {
-    setTodoList(
-      todoList.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTodo(e.target.value);
-  };
-
-  const completedTodos = todoList.filter((todo) => todo.completed);
-  const incompleteTodos = todoList.filter((todo) => !todo.completed);
 
   return (
-    <div className="todo-container">
-      <h2>Todos</h2>
+    <>
+      <div className="todos">
+        {todolist.map((item: Todo, index: number) => (
+          <div
+            key={item.id}
+            className="card text-wrap card-content justify-content-center text-center w-50 mt-3 mb-3 d-flex flex-row"
+          >
+            <h5 className="card-body card-text text-wrap d-inline-flex switch">
+              <div onClick={() => navigate("/viewtodos/" + item.id)}>
+                {index + 1}.{item.title}
+              </div>
 
-      <TodoForm
-        todo={todo}
-        handleAdd={handleAdd}
-        handleInput={handleInput}
-      />
-    
-      {loader ? (
-        <h3>Loading...</h3>
-      ) : (
-        <>
-          <div className="completed-todos">
-            <h3>Completed Todos</h3>
-            <ul className="todo-list">
-              {completedTodos.map((item) => (
-                <li key={item.id} className="todo-item">
-                  <input
-                    type="checkbox"
-                    checked={item.completed}
-                    onChange={() => checkCompleted(item.id)}
-                  />
-                  <span className="completed">{item.todo}</span>
-                  <button
-                    onClick={() => deleteTodo(item.id)}
-                    className="delete-button"
-                  >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
+              <input
+                className="check-box"
+                checked={item.isCompleted}
+                onChange={(e) => {
+                  handleCheckbox(item, e);
+                }}
+                type="checkbox"
+              />
+              <button
+                className="btn btn-danger"
+                onClick={() => handleDelete(item.id)}
+              >
+                Delete
+              </button>
+            </h5>
           </div>
-        
-          <div className="incomplete-todos">
-            <h3>Incomplete Todos</h3>
-            <ul className="todo-list">
-              {incompleteTodos.map((item) => (
-                <li key={item.id} className="todo-item">
-                  <input
-                    type="checkbox"
-                    checked={item.completed}
-                    onChange={() => checkCompleted(item.id)}
-                  />
-                  <span>{item.todo}</span>
-                  <button
-                    onClick={() => deleteTodo(item.id)}
-                    className="delete-button"
-                  >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>
-      )}
-    </div>
+        ))}
+      </div>
+    </>
   );
-};
-
-export default Todo;
+}

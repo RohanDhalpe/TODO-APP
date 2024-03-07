@@ -1,14 +1,41 @@
-import { useState } from "react";
+import  { useState } from "react";
+import { useNavigate } from "react-router";
+import axios from "axios"; 
 
-const TodoForm = ({todo, handleAdd,handleInput}:{todo:string,handleAdd: ()=>void, handleInput: (e:any)=>void}) => {
-  
-  return ( 
-    <div>
-        <input type="text" value={todo} placeholder="Enter a todo" onChange={handleInput} />
-        <button onClick={handleAdd} className="add-button"> Add Todo</button> 
+export default function AddTodos() {
+  const [title, setTitle] = useState("");
+  const navigate = useNavigate();
+
+  const handleAdd = () => {
+    if (title) {
+      axios.post("http://localhost:8000/todos", {
+        title: title,
+        isCompleted: false,
+      })
+      .then(() => {
+        navigate("/");
+        alert("Data Added successfully");
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        alert("Failed to add data");
+      });
+    } else {
+      alert("Todo Cannot be Empty");
+    }
+  };
+
+  return (
+    <div className="container">
+      <input
+        type="text"
+        placeholder="Enter Todos:"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <button className="btn btn-danger" onClick={handleAdd}>
+        Add
+      </button>
     </div>
-   
-   );
-};
- 
-export default TodoForm;
+  );
+}
