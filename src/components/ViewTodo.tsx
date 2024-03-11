@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 export default function ViewTodo() {
   const [title, setTitle] = useState<string>("");
   const params = useParams();
+  
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(`http://localhost:8000/todos/${params.id}`).then(

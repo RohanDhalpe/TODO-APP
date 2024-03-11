@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import Axios
+import axios from "axios";
 
 export interface Todo {
   id: number;
@@ -12,6 +12,7 @@ export interface Todo {
 export default function Todos() {
   const [todolist, setTodolist] = useState<Todo[]>([]);
   const [trigger, setTrigger] = useState(0);
+  const [showCompleted, setShowCompleted] = useState(false);
 
   const navigate = useNavigate();
 
@@ -25,7 +26,6 @@ export default function Todos() {
     todo: Todo,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log(e.target.checked);
     axios.patch(`http://localhost:8000/todos/${todo.id}`, {
       isCompleted: e.target.checked,
     })
@@ -36,16 +36,24 @@ export default function Todos() {
   const handleDelete = (id: number) => {
     axios.delete(`http://localhost:8000/todos/${id}`)
       .then(() => {
-        alert("Deleted Successfully");
+        alert("Task Deleted Successfully");
         setTrigger(trigger => trigger + 1);
       })
       .catch((error) => console.error("Error deleting todo:", error));
   };
 
+  const filteredTodos = showCompleted
+    ? todolist.filter(todo => todo.isCompleted)
+    : todolist.filter(todo => !todo.isCompleted);
+
   return (
     <>
       <div className="todos">
-        {todolist.map((item: Todo, index: number) => (
+        <div>   
+          <button onClick={() => setShowCompleted(false)}>Pending Todos</button>
+          <button onClick={() => setShowCompleted(true)}>Completed Todos</button>
+        </div>
+        {filteredTodos.map((item: Todo, index: number) => (
           <div
             key={item.id}
             className="card text-wrap card-content justify-content-center text-center w-50 mt-3 mb-3 d-flex flex-row"
