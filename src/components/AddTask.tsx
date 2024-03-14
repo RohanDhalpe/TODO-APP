@@ -2,51 +2,53 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as yup from "yup";
+import { useMutation } from "react-query";
+import { FormikHelpers } from "formik";
+
+interface FormValues {
+  title: string;
+  description: string;
+  assignee: string;
+  date: string;
+}
 
 const CreateTask = () => {
   const navigate = useNavigate();
 
+  const createTaskMutation = useMutation<void, any, FormValues>(
+    (newTask) => axios.post("http://localhost:8000/todos", newTask)
+  );
+
   const validationSchema = yup.object({
-    title: yup
-      .string()
-      .max(20, "Title length must be less than 20 characters")
-      .required("Title is required"),
+    title: yup.string().max(20).required("Title is required"),
     description: yup.string().required("Description is required"),
     assignee: yup.string().required("Assignee is required"),
     date: yup
       .string()
-      .matches(
-        /^(?:\d{4}-\d{2}-\d{2})$/,
-        'Date must be in the format YYYY-MM-DD'
-      )
+      .matches(/^(?:\d{4}-\d{2}-\d{2})$/, "Date must be in YYYY-MM-DD format")
       .required("Date is required"),
   });
 
-  const { handleSubmit, handleChange, handleBlur, values, errors, touched } =
-    useFormik({
-      initialValues: {
-        title: "",
-        description: "",
-        assignee: "",
-        date: "",
-      },
-      validationSchema: validationSchema,
-      onSubmit: async (values) => {
-        try {
-          await axios.post("http://localhost:8000/todos", {
-            title: values.title,
-            description: values.description,
-            assignee: values.assignee,
-            isCompleted: false,
-            date: values.date,
-          });
-          navigate("/");
-        } catch (err) {
-          console.error("Error:", err);
-          alert("Failed to add data");
-        }
-      },
-    });
+  const { handleSubmit, handleChange, handleBlur, values, errors, touched } = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      assignee: "",
+      date: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
+      try {
+        await createTaskMutation.mutateAsync(values);
+        navigate("/");
+      } catch (err) {
+        console.error("Error:", err);
+        alert("Failed to add data");
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
     <div className="container mt-4">
@@ -66,9 +68,7 @@ const CreateTask = () => {
                 required
                 autoFocus
               />
-              {errors.title && touched.title && (
-                <p className="text-danger">{errors.title}</p>
-              )}
+              {errors.title && touched.title && <p className="text-danger">{errors.title}</p>}
             </div>
 
             <div className="mb-2">
@@ -113,9 +113,7 @@ const CreateTask = () => {
                 onBlur={handleBlur}
                 required
               />
-              {errors.date && touched.date && (
-                <p className="text-danger">{errors.date}</p>
-              )}
+              {errors.date && touched.date && <p className="text-danger">{errors.date}</p>}
             </div>
 
             <button type="submit" className="btn btn-primary w-100">
