@@ -31,7 +31,6 @@ export default function AddTodos() {
         date: date
       })
       .then(() => {
-        alert("Data Added successfully");
         navigate("/");
       })
       .catch((err) => {

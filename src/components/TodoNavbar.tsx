@@ -1,15 +1,23 @@
+import { Link, useNavigate } from "react-router-dom";
+
 const TodoNavbar = () => {
+  const navigate = useNavigate()
   return (
-    <nav className="todo-navbar">
-      <form className="todo-form">
-        <button className="add-todos-btn" type="submit">
-          <a href="/addtodos" className="nav-link">Add Todos</a>
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <div className="container-fluid">
+      <div className="navbar-brand" style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>Tasks </div>
+      <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon"></span>
+      </button>
+      <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <form className="form-inline">
+        </form>
+        <button className=" btn-group add-todos-btn ml-2" type="submit">
+          <Link to="/addtodos" className="nav-link">Add Todos</Link>
         </button>
-        <button className="view-todos-btn" type="submit">
-          <a href="/" className="nav-link">View Todos</a>
-        </button>
-      </form>
-    </nav>
+      </div>
+    </div>
+  </nav>
   );
 };
 
