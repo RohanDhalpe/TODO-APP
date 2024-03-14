@@ -1,7 +1,6 @@
-import  { useState } from "react";
-import { useNavigate } from "react-router";
-import axios from "axios"; 
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
+import axios from "axios";
 
 export interface Todo {
   title: string;
@@ -10,12 +9,11 @@ export interface Todo {
 }
 
 export default function AddTodos() {
-  const [title, setTitle] = useState<string>();
-  const [date, setDate] = useState<string>();
+  const [title, setTitle] = useState<string>("");
+  const [date, setDate] = useState<string>("");
   const navigate = useNavigate();
-  
+
   const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    
     setDate(e.target.value);
   };
 
@@ -23,58 +21,58 @@ export default function AddTodos() {
     setTitle(e.target.value);
   };
 
-  const handleAdd = () => {
+  const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); 
     if (title && date) {
-      axios.post("http://localhost:8000/todos", {
-        title: title,
-        isCompleted: false,
-        date: date
-      })
-      .then(() => {
-        navigate("/");
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        alert("Failed to add data");
-      });
+      axios
+        .post("http://localhost:8000/todos", {
+          title: title,
+          isCompleted: false,
+          date: date,
+        })
+        .then(() => {
+      
+          navigate("/");
+        })
+        .catch((err) => {
+          console.error("Error:", err);
+          alert("Failed to add data");
+        });
     } else {
-      alert("Todo Cannot be Empty");
+      alert("Todo cannot be empty");
     }
   };
 
   return (
     <>
-      <div className="container mt-5">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 form p-3">
-            <h2 className="mb-4">Todo Form</h2>
-            <div>
-              <div className="mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Add a todo :"
-                  onChange={(e) => handleChangeInput(e)}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <input
-                  type="date"
-                  className="form-control"
-                  onChange={(e) => handleChangeDate(e)}
-                  required
-                />
-              </div>
-              <div>
-                <button className="btn btn-primary" onClick={handleAdd}>
-                  Add Todo
-                </button>
-              </div>
-            </div>
+      <div className="form-details text-center">
+        <form onSubmit={handleAdd}>
+          <h2>- Add Task - </h2>
+          <label htmlFor="title">Title : </label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Add a todo :"
+            value={title}
+            onChange={(e) => handleChangeInput(e)}
+            required
+          />
+          <br />
+          <div className="mb-3">
+            <input
+              type="date"
+              className="form-control"
+              value={date}
+              onChange={(e) => handleChangeDate(e)}
+              required
+            />
           </div>
-        </div>
+          <br />
+          <br />
+          <button type="submit" className="btn btn-primary">
+            Add Todo
+          </button>
+        </form>
       </div>
     </>
   );
