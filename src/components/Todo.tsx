@@ -8,6 +8,8 @@ export interface Todo {
   title: string;
   isCompleted: boolean;
   date: string;
+  description: string;
+  assignee: string;
 }
 
 export default function Todos() {
@@ -61,7 +63,7 @@ export default function Todos() {
           <input
             className="form-control w-25"
             type="search"
-            placeholder="Search a Todo...."
+            placeholder="Search a Task"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -82,37 +84,38 @@ export default function Todos() {
           </div>
         </div>
 
-        <div className="todos">
-          {filteredTodos.length > 0 ? (
-            filteredTodos.map((item: Todo) => (
-              <div
-                key={item.id}
-                className="card text-wrap card-content justify-content-center text-center w-50 mt-3 mb-3 d-flex flex-row"
-              >
-                <h5 className="card-body card-text text-wrap d-inline-flex switch">
-                  <div onClick={() => navigate("/viewtodos/" + item.id)}>
-                    {item.title}
-                    <br />
-                    {item.date}
+        <div className="container">
+          <div className="todos">
+            {filteredTodos.length > 0 ? (
+              filteredTodos.map((item) => (
+                <div
+                  key={item.id}
+                  className="card text-wrap card-content justify-content-center text-center w-50 mt-3 mb-3 d-flex flex-row"
+                >
+                  <div onClick={() => navigate("/viewtodos/" + item.id)} className="card-body card-text text-wrap d-inline-flex switch">
+                    <div>
+                      <h5>Title: {item.title}</h5>
+                      <p>Description: {item.description}</p>
+                    </div>
+                    <input
+                      className="check-box"
+                      checked={item.isCompleted}
+                      onChange={(e) => handleCheckbox(item, e)}
+                      type="checkbox"
+                    />
+                    <button
+                      className="btn btn-sm btn-danger ms-4"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      Delete
+                    </button>
                   </div>
-                  <input
-                    className="check-box"
-                    checked={item.isCompleted}
-                    onChange={(e) => handleCheckbox(item, e)}
-                    type="checkbox"
-                  />
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
-                </h5>
-              </div>
-            ))
-          ) : (
-            <p>No todos found.</p>
-          )}
+                </div>
+              ))
+            ) : (
+              <p>No todos found.</p>
+            )}
+          </div>
         </div>
       </div>
     </>

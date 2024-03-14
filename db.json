@@ -1,39 +1,32 @@
 {
   "todos": [
     {
-      "id": "7c9b",
-      "title": "task1",
+      "id": "1kj",
+      "title": "react",
+      "description": "react assignments",
+      "assignee": "teacher",
+      "isCompleted": true
+    },
+    {
+      "id": "45l",
+      "title": "Rohan",
+      "description": "Dhalpe",
+      "assignee": "you",
+      "isCompleted": true
+    },
+    {
+      "id": "c7c5",
+      "title": "react",
+      "description": "react lectures",
+      "assignee": "madam",
+      "isCompleted": false
+    },
+    {
+      "id": "29f7",
+      "title": "exam",
+      "description": "exam study",
+      "assignee": "teacher",
       "isCompleted": false,
-      "date": "2024-03-11"
-    },
-    {
-      "id": "8acc",
-      "title": "todo2",
-      "isCompleted": true,
-      "date": "2024-03-12"
-    },
-    {
-      "id": "b602",
-      "title": "todo3",
-      "isCompleted": true,
-      "date": "2024-03-12"
-    },
-    {
-      "id": "80de",
-      "title": "eeee",
-      "isCompleted": false,
-      "date": "2024-03-14"
-    },
-    {
-      "id": "56a8",
-      "title": "hh",
-      "isCompleted": false,
-      "date": "2024-03-31"
-    },
-    {
-      "id": "54e7",
-      "title": "sdfgh",
-      "isCompleted": true,
       "date": "2024-03-22"
     }
   ]
