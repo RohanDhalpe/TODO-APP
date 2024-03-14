@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Error from './components/Error';
 import TodoNavbar from './components/TodoNavbar';
 import ViewTodo from './components/ViewTodo';
-import CreateTask from './components/AddTask';
+import CreateTask from './components/CreateTask';
 import { QueryClientProvider, QueryClient } from 'react-query';
 
 const queryClient = new QueryClient()
