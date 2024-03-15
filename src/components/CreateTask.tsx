@@ -1,11 +1,11 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import * as yup from "yup";
 import { useMutation } from "react-query";
 import { FormikHelpers } from "formik";
+import { validationSchema } from "../validations/validation";
 
-interface FormValues {
+export interface FormValues {
   title: string;
   description: string;
   assignee: string;
@@ -19,16 +19,6 @@ const CreateTask = () => {
     (newTask) => axios.post("http://localhost:8000/todos", newTask)
   );
 
-  const validationSchema = yup.object({
-    title: yup.string().max(20).required("Title is required"),
-    description: yup.string().required("Description is required"),
-    assignee: yup.string().required("Assignee is required"),
-    date: yup
-      .string()
-      .matches(/^(?:\d{4}-\d{2}-\d{2})$/, "Date must be in YYYY-MM-DD format")
-      .required("Date is required"),
-  });
-
   const { handleSubmit, handleChange, handleBlur, values, errors, touched } = useFormik({
     initialValues: {
       title: "",
@@ -36,7 +26,7 @@ const CreateTask = () => {
       assignee: "",
       date: "",
     },
-    validationSchema: validationSchema,
+    validationSchema: validationSchema, 
     onSubmit: async (values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
       try {
         await createTaskMutation.mutateAsync(values);
