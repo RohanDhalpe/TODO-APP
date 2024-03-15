@@ -10,25 +10,28 @@ interface Todo {
 }
 
 const Todo = () => {
-  const [id, setId] = useState(0);
   const [todo, setTodo] = useState<string>("");
   const [todoList, setTodoList] = useState<Todo[]>([]);
-
   const { response, error, loader } = useFetch(TODO_ENDPOINT);
 
   useEffect(() => {
-    !error ? setTodoList(response) : console.log(error);
-  }, [response, error]);
-  
+    if (response) {
+      setTodoList(response);
+    }
+  }, [response]);
+
   const handleAdd = () => {
+    if (todo.trim() === "") {
+      return;
+    }
+
     const newTodo: Todo = {
-      id: id,
+      id: Date.now(),
       todo: todo,
       completed: false
     };
     setTodoList([...todoList, newTodo]);
     setTodo("");
-    setId(id + 1);
   };
 
   const deleteTodo = (id: number) => {
@@ -53,15 +56,15 @@ const Todo = () => {
   return (
     <div className="todo-container">
       <h2>Todos</h2>
-
       <TodoForm
         todo={todo}
         handleAdd={handleAdd}
         handleInput={handleInput}
       />
-    
       {loader ? (
         <h3>Loading...</h3>
+      ) : error ? ( 
+        <h3>Error: {error}</h3>
       ) : (
         <>
           <div className="completed-todos">
@@ -85,7 +88,6 @@ const Todo = () => {
               ))}
             </ul>
           </div>
-        
           <div className="incomplete-todos">
             <h3>Incomplete Todos</h3>
             <ul className="todo-list">
