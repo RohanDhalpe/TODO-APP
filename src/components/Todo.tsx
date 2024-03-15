@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import Axios
+import axios from "axios"; 
 
 export interface Todo {
   id: number;
@@ -15,28 +15,29 @@ export default function Todos() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchData = () => {
     axios.get("http://localhost:8000/todos")
-      .then((resp) => (setTodolist(resp.data)))
+      .then((resp) => setTodolist(resp.data))
       .catch((error) => console.error("Error fetching todos:", error));
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [trigger]);
 
   const handleCheckbox = (
     todo: Todo,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log(e.target.checked);
     axios.patch(`http://localhost:8000/todos/${todo.id}`, {
       isCompleted: e.target.checked,
     })
-    .then(() => setTrigger(trigger => trigger + 1))
     .catch((error) => console.error("Error updating todo:", error));
   };
 
   const handleDelete = (id: number) => {
     axios.delete(`http://localhost:8000/todos/${id}`)
       .then(() => {
-        alert("Deleted Successfully");
         setTrigger(trigger => trigger + 1);
       })
       .catch((error) => console.error("Error deleting todo:", error));
