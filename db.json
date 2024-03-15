@@ -8,20 +8,6 @@
       "isCompleted": false
     },
     {
-      "id": "45l",
-      "title": "Rohan",
-      "description": "Dhalpe",
-      "assignee": "you",
-      "isCompleted": true
-    },
-    {
-      "id": "c7c5",
-      "title": "react",
-      "description": "react lectures",
-      "assignee": "fff",
-      "isCompleted": false
-    },
-    {
       "id": "29f7",
       "title": "exam",
       "description": "exam study",
@@ -38,22 +24,6 @@
       "date": "2024-03-30"
     },
     {
-      "id": "45ae",
-      "title": "task1",
-      "description": "task desc",
-      "assignee": "dd",
-      "isCompleted": true,
-      "date": "2024-03-06"
-    },
-    {
-      "id": "8af8",
-      "title": "hello",
-      "description": "world",
-      "assignee": "kl",
-      "isCompleted": false,
-      "date": "2024-03-17"
-    },
-    {
       "id": "4ded",
       "title": "qq",
       "description": "qq",
@@ -66,6 +36,13 @@
       "description": "sdcrv",
       "assignee": "dfv",
       "date": "0004-04-25"
+    },
+    {
+      "id": "2fdf",
+      "title": "study",
+      "description": "learning dsa",
+      "assignee": "sarthak bornare",
+      "date": "2024-03-15"
     }
   ]
 }
